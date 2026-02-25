@@ -1,1 +1,1 @@
-ig samtaletid i uke 24 er: {gjennomsnitt} sekunder")
+plt.tight_layout()
