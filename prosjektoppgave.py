@@ -7,7 +7,7 @@ df = pd.read_excel("support_uke_24.xlsx")  # Leser excel filen
 #Oppgave del a)
 u_dag = df.iloc[:, 0].to_numpy()  # Kolonne 1 med navn u_dag. Dette ta med alle verdiene fra denne kolonnen
 kl_slett = pd.to_datetime(df.iloc[:, 1], format="%H:%M:%S").dt.hour  # Kolonne 2, dette tar med alle verdiene inne i variabelen.
-varighet = pd.to_timedelta(df.iloc[:, 2]).dt.total_seconds().to_numpy() # Kolonne 3, tar med alle verdier inne i variabelen men konverterer dette til sekunder istedet for klokkeslett.
+varighet = pd.to_timedelta(df.iloc[:, 2]).dt.total_seconds().to_numpy() # Kolonne 3, tar med alle verdier inne i variabelen, men konverterer dette til sekunder istedet for klokkeslett.
 tilfredshet = df.iloc[:, 3].to_numpy() 
 
 # print(u_dag)
@@ -54,12 +54,12 @@ finn_gjennomsnitt_minst_og_lengst_varighet(varighet)
 
 #Oppgave del e)
 def total_antall_henvendelser_tidsrom(kl_sletter):
-    bolker = { # lager bolker for å definere tidsrom
+    bolker = { # lager bolker for å definere tidsrom ved å bruke dictionary
         "08-10": 0, # startverdi er 0, altså ikke noe
         "10-12": 0,
         "12-14": 0,
         "14-16": 0
-    }
+    } # Strengene (altså klokkeslettene) er .keys(), og startverdiene (feks: 0) er .values(). Vi skal bruke disse senere.
 
     for time in kl_sletter:
         if 8 <= time < 10: # hvis timen er større eller lik time og samtidig mindre enn 10, skal det økes med 1
@@ -75,11 +75,11 @@ def total_antall_henvendelser_tidsrom(kl_sletter):
 
     print()
     print("Antall henvendelser per tidsrom i uke 24:") 
-    for bolk, antall in bolker.items():
+    for bolk, antall in bolker.items(): #siden vi bruker dictionary, skriver vi inn .items() for å hente verdier
         print(f"Kl {bolk}: {antall} henvendelser")
 
     plt.figure(figsize=(7, 7)) 
-    plt.pie(bolker.values(), labels=bolker.keys(), autopct="%1.1f%%") # Lager kakediagram
+    plt.pie(bolker.values(), labels=bolker.keys(), autopct="%1.1f%%") # Lager kakediagram, .values() henter verdiene og .keys() henter klokkeslett strengene fra bolker dictionary.
     plt.title("Henvendelser per tidsrom i uke 24")
     plt.tight_layout()
     plt.show() # vis
@@ -92,18 +92,18 @@ def finn_kundens_tilfredshet(score):
     antall_positive = 0
     antall_nøytrale = 0
     antall_negative = 0
-    for s in score_utenNaN: # for løkke gjennom faktiske verdier
+    for s in score_utenNaN: # for løkke som går gjennom faktiske verdier
         if s >= 9: # er verdien større eller lik 9? betingelse oppfylt
             antall_positive += 1 # øk positivitet med 1
-        elif s >= 7: # Dersom s ikke er større enn tallet 9, sjekk om at den er større eller lik 7
-            antall_nøytrale += 1
+        elif s >= 7: # Dersom s ikke er større enn eller lik tallet 9, sjekk om at den er større eller lik tallet 7
+            antall_nøytrale += 1 # Kundens tilfredshet er nøytral, øk dette med 1
         else: # Hvis ingen av if testene over har blitt oppfylt, regnes dette som negativ tilfredshet fra kunden
             antall_negative += 1 # Øk negativ tilfredshet fra kunden med 1 
 
     prosent_positive = (antall_positive / antall_totalt) * 100 # for å finne i prosentvis, må mån finne antall positive og dele med lengden av faktiske verdier, deretter gange med 100
     prosent_nøytrale = (antall_nøytrale / antall_totalt) * 100
     prosent_negative = (antall_negative / antall_totalt) * 100
-    NPS = prosent_positive - prosent_negative
+    NPS = prosent_positive - prosent_negative # For å finne NPS, må vi subtrahere positiv og negativ.
 
     print()
     print(f"Antall respondenter: {antall_totalt}")
@@ -111,5 +111,4 @@ def finn_kundens_tilfredshet(score):
     print(f"Nøytrale (7-8): {antall_nøytrale} ({prosent_nøytrale:.1f}%)")
     print(f"Negative (1-6): {antall_negative} ({prosent_negative:.1f}%)")
     print(f"NPS for supportavdelingen i uke 24: {NPS:.1f}")
-
-finn_kundens_tilfredshet(tilfredshet)
+finn_kundens_tilfredshet(tilfredshet) # Kaller opp funksjonen
